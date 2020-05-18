@@ -56,6 +56,18 @@ header {
     padding:0 10px;
     text-align:center;
 }
+header .rotated {
+    display:inline-block;
+    width:0px;
+    font-size:15px;
+    color:#ffb700;
+    position:relative; top:-5px; left:-18px;
+    transform:rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+}
 
 /* categories */
 .nav-links {
