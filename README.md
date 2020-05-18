@@ -25,6 +25,18 @@ When you add modules, the romanishell is able to upgrade itself remotely. It
 just takes you one click.
 
 
+## Disclaimer
+
+The Shellmanator is <ins>designed for educational purpose and/or to be used as
+a penetration testing tool</ins>. Even if there is an authentication mechanism,
+**you MUST NOT use this tool for a real-world server administration** because
+it'd expose your host to high security risks.
+
+I want to be as clear as possible : DO NOT let a webshell (romanishell) on
+your or someone else's system. If you need to admin a Linux machine, prefer a
+standard and secure method.
+
+
 ## Technologies
 
 Requirements (local app) :
