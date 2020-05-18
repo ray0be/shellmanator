@@ -1,0 +1,9 @@
+{
+    "port": 1337,
+    "env": "development",
+    "use_tor": false,
+    "version": {
+        "num": "0.0.1",
+        "name": "stinger"
+    }
+}

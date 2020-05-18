@@ -1,0 +1,384 @@
+/* shellman.css */
+
+/**
+ * ==========================================================================
+ *  Universal
+ * ==========================================================================
+ */
+
+html, body {
+    margin:0;
+    padding:0;
+    height:100%;
+    width:100%;
+    overflow:hidden;
+}
+
+a, a:active, a:hover, a:focus, label {
+    cursor:pointer;
+}
+
+/*a, a:active, a:hover, a:focus {
+    text-decoration:none !important;
+    cursor:pointer;
+    background:inherit !important;
+    color:inherit !important;
+}
+a.blue {
+    color:blue !important;
+}
+a.blue:hover {
+    text-decoration:underline !important;
+}*/
+
+
+/**
+ * ==========================================================================
+ *  Shellman design
+ * ==========================================================================
+ */
+
+/* nav bar */
+#menu {
+    width:220px;
+    border-right:2px solid black;
+    background:#1f1f1f;
+    color:white;
+    position:absolute; top:0; left:0; bottom:0;
+    z-index:500;
+}
+
+/* app title */
+header {
+    height:50px;
+    line-height:50px;
+    font-size:25px;
+    padding:0 10px;
+    text-align:center;
+}
+
+/* categories */
+.nav-links {
+    max-height:calc(100% - 50px - 50px);
+    width:218px;
+    overflow-y:auto;
+    position:relative; top:20px;
+    z-index:400;
+}
+.nav-links ul {
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+.nav-links ul li {
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+.nav-links ul li a {
+    display:block;
+    padding:5px 15px;
+    font-size:20px;
+    color:#A1A1A1;
+    text-decoration:none !important;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.nav-links ul li a:hover {
+    background:#232323;
+    color:#C6C500;
+}
+.nav-links ul li a.active {
+    background:#C6C500;
+    color:#232323;
+}
+
+/* list of servers */
+.nav-servers {
+    height:44px;
+    width:220px;
+    overflow-y:auto;
+    border:2px solid #756A00;
+    background:#323232;
+    transition:0.2s height;
+
+    position:absolute; left:0; bottom:0;
+    z-index:400;
+}
+.nav-servers.expanded {
+    height:50%;
+}
+.nav-servers ul {
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+.nav-servers ul li {
+    margin:0;
+    padding:0;
+    list-style:none;
+    height:20px;
+    line-height:20px;
+    font-size:15px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.nav-servers ul li a {
+    display:block;
+    height:20px;
+    line-height:20px;
+    color:white !important;
+    padding:0 3px;
+    text-decoration:none !important;
+}
+.nav-servers ul li a:hover {
+    background-color:#756A00;
+}
+.nav-servers ul li a.active {
+    background-color:#887B00;
+}
+.nav-servers ul li a.toggle, #nav-servers ul li a.toggle:hover {
+    background-color:inherit !important;
+    text-align:center;
+    border-bottom:1px dashed white;
+}
+
+/* status bar : request status */
+#reqstatus {
+    height:20px;
+    line-height:20px;
+    font-size:12px;
+    padding:0 10px;
+    color:black;
+    border-bottom:1px solid black;
+    position:absolute; top:0; left:220px; right:0;
+    z-index:490;
+}
+#reqstatus img {
+    margin:0 10px;
+}
+
+/* status bar : IP/Tor status */
+#servstatus {
+    height:20px;
+    line-height:20px;
+    font-size:12px;
+    padding:0 10px;
+    background-color:#1f1f1f;
+    color:white;
+    border-left:1px solid black;
+    position:absolute; top:0; right:0;
+    z-index:495;
+}
+#servstatus .ok {
+    color:#00C400;
+    font-weight:bold;
+}
+#servstatus .ok::before {
+    content:'OK';
+}
+#servstatus .nok {
+    color:#FF4848;
+    font-weight:bold;
+}
+#servstatus .nok::before {
+    content:'NOK';
+}
+
+/* page */
+#page {
+    background-image:linear-gradient(to bottom right, #EE985A, #8937AE);
+    position:absolute; top:20px; left:220px; right:0; bottom:0;
+}
+
+#page section {
+    height:100%;
+    width:100%;
+    display:none;
+    margin:0;
+    padding:15px;
+    overflow-y:auto;
+}
+
+#page section#page-dashboard {
+    color:black;
+    background-image:linear-gradient(to bottom right, #A1ADB0, #D6D9DC);
+}
+#page section#page-terminal {
+    color:white;
+    background-color:#1f1f1f;
+}
+#page section#page-ftp {
+    color:black;
+    background-image:linear-gradient(to bottom right, #EE985A, #8937AE);
+}
+
+
+/**
+ * ==========================================================================
+ *  iFraming
+ * ==========================================================================
+ */
+
+
+/**
+ * ==========================================================================
+ *  Dashboard
+ * ==========================================================================
+ */
+
+#page-dashboard ul {
+    margin:0;
+}
+#page-dashboard ul li {
+    margin-top:0;
+}
+#page-dashboard .panel-body {
+    padding-bottom:10px;
+}
+#page-dashboard .panel {
+    margin-bottom:15px;
+}
+
+
+/**
+ * ==========================================================================
+ *  FTP
+ * ==========================================================================
+ */
+
+
+
+/**
+ * ==========================================================================
+ *  Terminal
+ * ==========================================================================
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+#page {
+    position:absolute; top:20px; left:220px; right:0; bottom:0;
+    overflow:auto;
+}
+nav ul {
+    list-style:none;
+    margin:20px 0;
+    padding:0;
+}
+nav ul li a {
+    display:block;
+    padding:5px 15px;
+    font-size:20px;
+}
+nav ul li a:hover {
+    background:#232323 !important;
+    color:#C6C500 !important;
+}
+nav ul li a.active {
+    background:#C6C500 !important;
+    color:#232323 !important;
+}
+img {
+    float:none !important;
+}
+section {
+    display:none;
+    margin:0;
+    padding:15px;
+}
+section.shell {
+    background:#313131;
+    color:white;
+    padding-bottom:60px;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    font-family:monospace;
+    font-size:15px;
+}
+#terminal {
+    width:100%;
+    overflow:auto;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:60px;
+    padding:10px;
+}
+.promptouille {
+    height:60px;
+    line-height:40px;
+    width:100%;
+    padding:10px;
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+}
+#ftp-folder {
+    width:55%;
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    padding:10px;
+}
+#ftp-folder table {
+    margin-bottom:15px;
+}
+#ftp-file, #ftp-upload, #ftp-image {
+    width:45%;
+    height:100%;
+    display:none;
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    padding:10px;
+}
+.CodeMirror {
+    width:100%;
+    height:calc(100% - 60px);
+    position:relative;
+}
+#ftp-file .infoblock {
+    height:30px;
+    line-height:30px;
+}
+section.database iframe {
+    display:block;
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
+.highlighted, .highlighted:hover {
+    background-color:yellow !important;
+}
+*/

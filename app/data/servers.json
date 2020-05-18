@@ -1,0 +1,22 @@
+{
+    "127001": {
+        "desc": "Local tests #1",
+        "domain": "127.0.0.1",
+        "url": "http://127.0.0.1/romanishell/rom1.php",
+        "config": {
+            "shl-version": "0.0.1",
+            "secretkey": "+67SyQT298gGgT+mL+Ft53MGTAC9KGEu6zeFS5GjmdA=",
+            "modules": []
+        }
+    },
+    "localhost": {
+        "desc": "Local tests #2",
+        "domain": "localhost",
+        "url": "http://localhost/romanishell/rom2.php",
+        "config": {
+            "shl-version": "0.0.1",
+            "secretkey": "SRA14CuOfZL3stj6kNLT51Ue/B6pF2jafnLFkFQJkmA=",
+            "modules": []
+        }
+    }
+}

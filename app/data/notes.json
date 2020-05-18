@@ -1,0 +1,11 @@
+{
+    "localhost": [
+        [
+            {
+                "size": 6,
+                "title": "Simple note",
+                "content": "Hello World !"
+            }
+        ]
+    ]
+}

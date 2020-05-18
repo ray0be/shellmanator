@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>The Shellmanator</title>
+    <link rel="shortcut icon" href="/static/img/favicon.png">
+
+    <link rel="stylesheet" href="/static/css/spectre-0.5.8.min.css" media="screen">
+    <link rel="stylesheet" href="/static/css/codemirror-5.53.2.min.css" media="screen">
+    <link rel="stylesheet" href="/static/css/shellman.css" media="screen">
+    <link rel="stylesheet" href="/static/css/silkicons.css" media="screen">
+</head>
+<body>
+    <div id="vue-app">
+        <!-- Menu -->
+        <div id="menu">
+            <!-- App name -->
+            <header>The Shellmanator</header>
+
+            <!-- Navigation Links -->
+            <nav-links :server_id="server_id"></nav-links>
+
+            <!-- List of servers -->
+            <nav-servers :nb="nb_servers" :server_id="server_id"></nav-servers>
+        </div>
+
+        <!-- Request Status Bar -->
+        <div id="reqstatus" :style="'background-color:'+request.color">
+            <img src="/static/img/loader.gif" alt="..." align="absmiddle" v-show="request.in_progress"/>
+            <span>
+                {{ request.type }}
+                <span v-if="!request.in_progress">({{ request.duration }}ms)</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+            </span>
+            <span>{{ request.info }} &nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span v-if="!request.in_progress">{{ request.status }}</span>
+        </div>
+
+        <!-- IP/Location Status Bar -->
+        <div id="servstatus">
+            <a @click="refresh_status" title="Refresh"><span class="silkicon arrow_refresh_small"></span></a>
+
+            <span class="text-gray">Dir:</span>
+            <span class="text-warning">{{ status.geoloc.dir.country }} - {{ status.geoloc.dir.city }}</span>
+            ({{ status.geoloc.dir.ip }})
+            &nbsp;|&nbsp;
+
+            <span class="text-gray">Tor:</span>
+            <span class="text-warning">{{ status.geoloc.tor.country }} - {{ status.geoloc.tor.city }}</span>
+            ({{ status.geoloc.tor.ip }})
+            &nbsp;|&nbsp;
+
+            <span class="text-gray">Status:</span>
+            VPN [<span :class="(status.vpn) ? 'ok' : 'nok'"></span>]
+            TOR [<span :class="(status.tor) ? 'ok' : 'nok'"></span>]
+            <a @click="change_identity" title="Change Tor Identity"><span class="silkicon user_go"></span></a>
+        </div>
+
+        <!-- Page content -->
+        <div id="page">
+            <section id="page-dashboard">
+                <dashboard></dashboard>
+            </section>
+        </div>
+    </div>
+
+    <script src="/static/js/jquery-3.5.1.min.js"></script>
+    <script src="/static/js/jquery.timeago-1.6.7.min.js"></script>
+    <script src="/static/js/vue-2.6.11.js"></script>
+
+    <script src="/static/js/codemirror-5.53.2.min.js"></script>
+    <script src="/static/js/codemirror-5.53.2.closebrackets.min.js"></script>
+    <script src="/static/js/codemirror-5.53.2.closetag.min.js"></script>
+
+    <script src="/static/js/shellman.common.js"></script>
+    <script src="/static/js/shellman.components.js"></script>
+    <script src="/static/js/shellman.main.js"></script>
+</body>
+</html>
