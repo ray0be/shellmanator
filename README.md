@@ -51,28 +51,23 @@ Requirements (remote servers) :
 
 Credits :
 
+* Python :
+  * [Totoro 1.1.2](https://github.com/ray0be/totororequests) ([MIT](https://opensource.org/licenses/MIT))
+  * [Flask 1.1.2](https://flask.palletsprojects.com/en/1.1.x/) ([Flask License](https://flask.palletsprojects.com/en/1.1.x/license/))
+  * [Requests 2.23.0](https://requests.readthedocs.io/en/master/) ([Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0))
 * Javascript :
   * [Vue.js v2.6.11](https://vuejs.org/) ([MIT](https://opensource.org/licenses/MIT))
+  * [Vuex v3.4.0](https://vuex.vuejs.org) ([MIT](https://opensource.org/licenses/MIT))
   * [CodeMirror v5.53.2](https://codemirror.net/) ([MIT](https://opensource.org/licenses/MIT))
   * [jQuery v3.5.1](https://jquery.com/) ([MIT](https://opensource.org/licenses/MIT))
   * [jQuery timeago 1.6.7](https://timeago.yarp.com/) ([MIT](https://opensource.org/licenses/MIT))
 * CSS :
   * [Spectre.css 0.5.8](https://picturepan2.github.io/spectre/index.html) ([MIT](https://opensource.org/licenses/MIT))
-* Python :
-  * [Totoro 1.1.2](https://github.com/ray0be/totororequests) ([MIT](https://opensource.org/licenses/MIT))
-  * [Flask 1.1.2](https://flask.palletsprojects.com/en/1.1.x/) ([Flask License](https://flask.palletsprojects.com/en/1.1.x/license/))
-  * [Requests 2.23.0](https://requests.readthedocs.io/en/master/) ([Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0))
 * Icons :
   * [FAMFAMFAM Silk Icons 1.3](http://www.famfamfam.com/lab/icons/silk/) ([CC A 2.5](https://creativecommons.org/licenses/by/2.5/))
 
 
 ## Versions
-
-Current versions :
-
-* The Shellmanator : v0.0.1 (stinger)
-* Romanishell : v0.0.1 (paznic)
-* modules : stinger-paznic
 
 History :
 

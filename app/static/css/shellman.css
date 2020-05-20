@@ -38,7 +38,9 @@ a.blue:hover {
  * ==========================================================================
  */
 
-/* nav bar */
+/**
+ * Vertical left menu bar
+ */
 #menu {
     width:220px;
     border-right:2px solid black;
@@ -48,7 +50,9 @@ a.blue:hover {
     z-index:500;
 }
 
-/* app title */
+/**
+ * Application title
+ */
 header {
     height:50px;
     line-height:50px;
@@ -69,7 +73,9 @@ header .rotated {
     -o-transform: rotate(-45deg);
 }
 
-/* categories */
+/**
+ * For an opened Session : List of available modules
+ */
 .nav-links {
     max-height:calc(100% - 50px - 50px);
     width:218px;
@@ -106,7 +112,9 @@ header .rotated {
     color:#232323;
 }
 
-/* list of servers */
+/**
+ * List of servers
+ */
 .nav-servers {
     height:44px;
     width:220px;
@@ -151,13 +159,22 @@ header .rotated {
 .nav-servers ul li a.active {
     background-color:#887B00;
 }
-.nav-servers ul li a.toggle, #nav-servers ul li a.toggle:hover {
+.nav-servers ul li a.toggle {
     background-color:inherit !important;
     text-align:center;
     border-bottom:1px dashed white;
 }
+.nav-servers ul li a.manage {
+    background-color:inherit !important;
+    text-align:right;
+}
+.nav-servers ul li a.manage:hover {
+    color:gray !important;
+}
 
-/* status bar : request status */
+/**
+ * Request Status bar
+ */
 #reqstatus {
     height:20px;
     line-height:20px;
@@ -172,8 +189,10 @@ header .rotated {
     margin:0 10px;
 }
 
-/* status bar : IP/Tor status */
-#servstatus {
+/**
+ * IP Status bar
+ */
+#ipstatus {
     height:20px;
     line-height:20px;
     font-size:12px;
@@ -184,37 +203,49 @@ header .rotated {
     position:absolute; top:0; right:0;
     z-index:495;
 }
-#servstatus .ok {
+#ipstatus .ok {
     color:#00C400;
     font-weight:bold;
 }
-#servstatus .ok::before {
+#ipstatus .ok::before {
     content:'OK';
 }
-#servstatus .nok {
+#ipstatus .nok {
     color:#FF4848;
     font-weight:bold;
 }
-#servstatus .nok::before {
+#ipstatus .nok::before {
     content:'NOK';
 }
 
-/* page */
+
+/**
+ * ==========================================================================
+ *  Page
+ * ==========================================================================
+ */
+
 #page {
-    background-image:linear-gradient(to bottom right, #EE985A, #8937AE);
+    background:white;
     position:absolute; top:20px; left:220px; right:0; bottom:0;
 }
 
 #page section {
     height:100%;
     width:100%;
-    display:none;
     margin:0;
     padding:15px;
     overflow-y:auto;
+    position:relative;
 }
 
-#page section#page-dashboard {
+#page section.default {
+    color:black;
+    background-image:linear-gradient(to bottom right, #EE985A, #8937AE);
+    font-size:80px;
+}
+
+/*#page section#page-dashboard {
     color:black;
     background-image:linear-gradient(to bottom right, #A1ADB0, #D6D9DC);
 }
@@ -225,7 +256,7 @@ header .rotated {
 #page section#page-ftp {
     color:black;
     background-image:linear-gradient(to bottom right, #EE985A, #8937AE);
-}
+}*/
 
 
 /**
