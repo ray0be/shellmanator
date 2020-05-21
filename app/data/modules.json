@@ -1,3 +1,14 @@
 {
-    "core": "Dashboard"
+    "core": {
+        "title": "Dashboard",
+        "icon": "application_view_tile"
+    },
+    "serverscan": {
+        "title": "Server Scan",
+        "icon": "zoom"
+    },
+    "terminal": {
+        "title": "Terminal",
+        "icon": "application_osx_terminal"
+    }
 }
