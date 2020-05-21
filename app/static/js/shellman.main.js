@@ -39,11 +39,20 @@ const app = new Vue({
             }
         }
     },
+    computed: {
+        currentSession: function() {
+            return this.$store.state.currentSession;
+        }
+    },
     methods: {
+        listOfServers: function() {
+            return serverList;
+        },
+
         /**
          * Semi-methods that help to start and terminate an HTTP request.
          */
-        startAPIcall: function(localOrRemote, actionOrModuleName, data) {
+        startAPIcall: function(localOrRemote, actionOrModuleName, remoteHandler, data) {
             if (!this.request.isInProgress) {
                 // No in-progress request, let's prepare for a new one
                 this.request.color = '#e3e3e3';
@@ -52,6 +61,7 @@ const app = new Vue({
 
                 var tmp = (localOrRemote == 'remote') ? 'module=' : 'action=';
                 tmp += actionOrModuleName;
+                tmp += (localOrRemote == 'remote') ? ` | handler=${remoteHandler}` : '';
                 for (var param in data) {
                     tmp += ` | ${param}=${data[param]}`;
                 }
@@ -60,9 +70,11 @@ const app = new Vue({
                 this.request.duration = null;
                 this.request.startedAt = (new Date()).getTime();
 
+                console.log(`AJAX: ${this.request.type} - ${this.request.info}...`);
                 return true;
             }
 
+            console.error('Cannot send a new request, another is still waiting for response.');
             return false;
         },
         endAPIcall: function(error, statusCode, statusText) {
@@ -73,6 +85,7 @@ const app = new Vue({
 
             if (statusCode == 418) {
                 this.request.color = '#93E4FF'; // light blue
+                error = false;
             }
             else if (statusCode >= 500 || error) {
                 this.request.color = '#FFA893'; // orange/red
@@ -89,15 +102,16 @@ const app = new Vue({
             else if (statusCode >= 400 && statusCode < 500) {
                 this.request.color = '#FF93E7'; // purple
             }
+
+            var logfunc = error ? console.error : console.log;
+            logfunc(`AJAX: ${this.request.type} - ${this.request.info} => ${this.request.status} (${this.request.duration}ms)`);
         },
 
         /**
          * Performs a request against the local API
          */
         localAPIcall: function(info, cb) {
-            if (this.startAPIcall('local', info, null)) {
-                console.log(`AJAX: local request (${info})...`);
-
+            if (this.startAPIcall('local', info, null, null)) {
                 jQuery.ajax({
                     method: "GET",
                     url: API_LOCAL,
@@ -107,12 +121,10 @@ const app = new Vue({
                     timeout: 10000,
                     dataType: 'json',
                     success: (data, status, xhr) => {
-                        console.log(`Ajax OK: local request (${info}) : ${xhr.status} ${xhr.statusText}`);
                         this.endAPIcall(false, xhr.status, xhr.statusText);
                         cb(data);
                     },
                     error: (xhr, status, httperror) => {
-                        console.error(`Ajax Error: local request (${info}) : ${xhr.status} ${xhr.statusText}`);
                         this.endAPIcall(true, xhr.status, `${xhr.statusText} (${status})`);
                     }
                 });
@@ -123,34 +135,30 @@ const app = new Vue({
          * Performs a request that is forwarded to the remote API
          * (the webshell on remote server)
          */
-        remoteAPIcall: function(moduleName, data, cb, servid=null) {
-            if (this.startAPIcall('remote', moduleName, data)) {
-                console.log(`AJAX: remote request (${moduleName})...`);
-
+        remoteAPIcall: function(moduleName, handler, data, cb, cbError=null, servid=null) {
+            if (this.startAPIcall('remote', moduleName, handler, data)) {
                 jQuery.ajax({
                     method: "POST",
                     url: API_REMOTE,
                     data: JSON.stringify({
                         server: (servid ? servid : this.$store.state.currentSession),
                         module: moduleName,
-                        data: data
+                        data: {
+                            handler: handler,
+                            data: data
+                        }
                     }),
                     timeout: 10000,
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: (data, status, xhr) => {
                         this.endAPIcall(false, xhr.status, xhr.statusText);
-                        cb(data);
+                        if (cb) cb(data);
                     },
                     error: (xhr, status, httperror) => {
                         var msg = xhr.statusText + (xhr.status != 418 ? ` (${status})` : '');
                         this.endAPIcall(true, xhr.status, msg);
-                    },
-                    complete: (xhr, status) => {
-                        console.log(`Ajax ${status.toUpperCase()}: remote request (${moduleName}) : ${xhr.status} ${xhr.statusText}`);
-                        if (status == 'error' && xhr.status == 418) {
-                            cb(JSON.parse(xhr.responseText));
-                        }
+                        if (cbError) cbError(xhr.status, xhr.responseText);
                     }
                 });
             }

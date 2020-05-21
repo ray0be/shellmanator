@@ -20,7 +20,7 @@
             <header><span class="rotated">The</span>Shellmanator</header>
 
             <!-- Navigation Links -->
-            <!--<nav-links :server_id="server_id"></nav-links>-->
+            <nav-links :session="currentSession"></nav-links>
 
             <!-- List of servers -->
             <nav-servers></nav-servers>
@@ -60,14 +60,12 @@
 
         <!-- Page content -->
         <div id="page">
-            <section class="default" v-if="!this.$store.state.currentSession">
-                <div style="width:100%;position:absolute;top:50%;transform:translateY(-50%);text-align:center;">
+            <section class="default" v-if="!currentSession">
+                <div style="width:calc(100% - 30px);position:absolute;top:50%;transform:translateY(-50%);text-align:center;">
                     Choose a server<br>&larr;
                 </div>
             </section>
-            <section id="session-XXX-module-dashboard">
-
-            </section>
+            <session-frame v-for="(serv, servid) in listOfServers()" :session="servid" :key="'session-' + servid"></session-frame>
         </div>
     </div>
 

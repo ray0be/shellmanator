@@ -230,6 +230,12 @@ header .rotated {
     position:absolute; top:20px; left:220px; right:0; bottom:0;
 }
 
+#page .session-frame {
+    height:100%;
+    width:100%;
+    position:relative;
+}
+
 #page section {
     height:100%;
     width:100%;

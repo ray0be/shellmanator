@@ -13,15 +13,6 @@ const API_REMOTE = '/remote/api';
 
 /**
  * ==========================================================================
- *  List of modules
- * ==========================================================================
- */
-
-var moduleList = null;
-
-
-/**
- * ==========================================================================
  *  List of servers
  * ==========================================================================
  */
@@ -48,18 +39,31 @@ Vue.use(Vuex);
 const stateStore = new Vuex.Store({
     state: {
         nbServers: 0,
-        currentSession: null
+        currentSession: null,
+        currentModule: null
     },
     mutations: {
         setNbServers: function(state, nb) {
             state.nbServers = nb;
         },
-        switchSession: function(state, sid) {
-            if (typeof sid == 'string' || sid === null) {
-                if (sid !== state.currentSession && sid in sessionList) {
-                    state.currentSession = sid;
-                }
+        setSession: function(state, sid) {
+            if (sid === null) {
+                state.currentSession = null;
             }
+            else if (typeof sid == 'string' && sid !== state.currentSession && sid in sessionList) {
+                // update session
+                state.currentSession = sid;
+
+                // retrieve the current module of this session
+                state.currentModule = sessionList[sid].currentModule;
+
+                console.log(`Switched session to "${sid}"`);
+            }
+        },
+        setModule: function(state, moduleName) {
+            state.currentModule = moduleName;
+
+            console.log(`Switched module to "${moduleName}"`);
         }
     }
 });
@@ -77,10 +81,10 @@ class Session
 {
     constructor(sid, modules) {
         this.server = sid;
-
         this.currentModule = null;
+
         this.modules = {};
-        for (let m in modules) {
+        for (let m of modules) {
             this.modules[m] = new Module(m);
         }
     }
@@ -89,66 +93,78 @@ class Session
         return this.modules;
     }
 
+    hasModule(moduleName) {
+        return moduleName in this.modules;
+    }
+
     getModule(moduleName) {
-        if (moduleName in this.modules) {
+        if (this.hasModule(moduleName)) {
             return this.modules[moduleName];
         }
         return null;
     }
 
-    switchModule(newmod) {
-        if (newmod in this.modules) {
-            this.currentModule = newmod;
-            return true;
+    switchModule(newModuleName) {
+        if (newModuleName != this.currentModule) {
+            if (newModuleName in this.modules) {
+                this.currentModule = newModuleName;
+                stateStore.commit('setModule', newModuleName);
+                setTimeout(() => {
+                    eventHub.$emit(`session-${this.server}-module-${newModuleName}`);
+                }, 50);
+                return true;
+            }
+            console.error(`Cannot switch to unknown module "${newModuleName}" !`);
         }
-
-        console.error(`Cannot switch to unknown module "${newmod}" !`);
-    }
-
-    // close() {
-    //     // Destroy all modules Vue instances
-    //     for (let m in this.modules) {
-    //         this.modules[m].instance.$destroy();
-    //         this.modules[m] = null;
-    //     }
-    // }
-}
-
-class Module
-{
-    constructor(moduleName) {
-        this.moduleName = moduleName;
-    }
-
-    makeRequest(data, cb) {
-        app.remoteAPIcall(this.moduleName, data, cb);
     }
 }
 
 
 /**
  * ==========================================================================
- *  Register a Module's Vue instance
- *  => helper for modules
+ *  List of modules
  * ==========================================================================
  */
 
-// var getModule = function(moduleName) {
-//     let tmp_session = stateStore.state.currentSession;
-//     if (tmp_session && tmp_session in sessionList) {
-//         let tmp_module = sessionList[tmp_session].getModule(moduleName);
+var moduleList = null;
 
-//         if (tmp_module) {
-//             return tmp_module;
-//         }
-//         else {
-//             alert(`Unable to retrieve "${moduleName}" : no module with this name`);
-//         }
-//     }
-// };
+class Module
+{
+    constructor(moduleName) {
+        this.name = moduleName;
+        this.title = moduleList[moduleName].title;
+        this.icon = moduleList[moduleName].icon;
+    }
 
-// var MODULE_DASHBOARD = getModule('dashboard');
-// MODULE_DASHBOARD.setVueInstance(new Vue(...));
-// MODULE_DASHBOARD.makeRequest({'lol':2}, function(data) {
-    //
-// });
+    makeRequest(handler, data, cb, cbError=null) {
+        app.remoteAPIcall(this.name, handler, data, cb, cbError);
+    }
+}
+
+/**
+ * Module mixin
+ */
+Vue.mixin({
+    data: function() {
+        return {
+            firstTimeWakeUp: true
+        };
+    },
+    created: function() {
+        if (this.isModule) eventHub.$on(`session-${this.session}-module-${this.module}`, this.pleaseWakeUpNow);
+    },
+    beforeDestroy: function () {
+        if (this.isModule) eventHub.$off(`session-${this.session}-module-${this.module}`);
+    },
+    methods: {
+        pleaseWakeUpNow: function() {
+            if (this.wakeUp) {
+                this.wakeUp(this.firstTimeWakeUp);
+            }
+            this.firstTimeWakeUp = false;
+        },
+        apiCall: function(...args) {
+            if (this.isModule) sessionList[this.session].getModule(this.module).makeRequest(...args);
+        }
+    }
+});
