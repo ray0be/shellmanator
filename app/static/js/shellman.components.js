@@ -21,10 +21,10 @@ Vue.component('nav-links', {
                         {{ module.title }}
                     </a>
                 </li>
-                <li>
+                <li style="margin-top:20px;">
                     <a @click="disconnect">
                         <span class="silkicon door_out"></span>
-                        Close session
+                        <small class="text-error">Close session</small>
                     </a>
                 </li>
             </ul>
