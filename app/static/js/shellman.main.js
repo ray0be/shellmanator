@@ -62,8 +62,11 @@ const app = new Vue({
                 var tmp = (localOrRemote == 'remote') ? 'module=' : 'action=';
                 tmp += actionOrModuleName;
                 tmp += (localOrRemote == 'remote') ? ` | handler=${remoteHandler}` : '';
-                for (var param in data) {
-                    tmp += ` | ${param}=${data[param]}`;
+                for (let param in data) {
+                    let tmpdata = data[param];
+                    tmpdata = /\s/.test(tmpdata) ? '[...]' : tmpdata;
+                    tmpdata = (tmpdata.length > 15) ? substr(tmpdata, 0, 10)+'[...]' : tmpdata;
+                    tmp += ` | ${param}=${tmpdata}`;
                 }
                 this.request.info = tmp;
 

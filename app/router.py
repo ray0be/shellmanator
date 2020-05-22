@@ -73,6 +73,23 @@ def define_routes(app):
             totoro().change_identity()
             return jsonify({"ok":True})
 
+        elif info == 'getnote':
+            noteData = fm.readjson('app/data/notes.json')
+            servid = data['servid']
+
+            noteContent = noteData[servid] if servid in noteData else ""
+
+            return jsonify({"content":noteContent})
+
+        elif info == 'savenote':
+            noteData = fm.readjson('app/data/notes.json')
+            servid = data['servid']
+            content = data['content']
+
+            noteData[servid] = content
+            fm.writejson('app/data/notes.json', noteData)
+            return jsonify({"ok":True})
+
         return abort(404)
 
     @app.route('/remote/api', methods=['POST'])
