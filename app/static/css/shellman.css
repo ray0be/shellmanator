@@ -18,6 +18,10 @@ a, a:active, a:hover, a:focus, label {
     cursor:pointer;
 }
 
+dl dd {
+    margin:.2rem 0 .4rem 10px;
+}
+
 /*a, a:active, a:hover, a:focus {
     text-decoration:none !important;
     cursor:pointer;
@@ -117,9 +121,9 @@ header .rotated {
  */
 .nav-servers {
     height:44px;
-    width:220px;
+    width:218px;
     overflow-y:auto;
-    border:2px solid #756A00;
+    border:2px solid #006A16;
     background:#323232;
     transition:0.2s height;
 
@@ -149,19 +153,28 @@ header .rotated {
     display:block;
     height:20px;
     line-height:20px;
-    color:white !important;
+    color:white;
     padding:0 3px;
     text-decoration:none !important;
 }
 .nav-servers ul li a:hover {
-    background-color:#756A00;
+    color:black;
+    background-color:#A2FF99;
+}
+.nav-servers ul li a.open {
+    color:#08BD00;
+}
+.nav-servers ul li a.open:hover {
+    color:green;
 }
 .nav-servers ul li a.active {
-    background-color:#887B00;
+    color:black;
+    background-color:#00D503;
 }
 .nav-servers ul li a.toggle {
     background-color:inherit !important;
     text-align:center;
+    color:white !important;
     border-bottom:1px dashed white;
 }
 .nav-servers ul li a.manage {
@@ -250,19 +263,6 @@ header .rotated {
     background-image:linear-gradient(to bottom right, #EE985A, #8937AE);
     font-size:80px;
 }
-
-/*#page section#page-dashboard {
-    color:black;
-    background-image:linear-gradient(to bottom right, #A1ADB0, #D6D9DC);
-}
-#page section#page-terminal {
-    color:white;
-    background-color:#1f1f1f;
-}
-#page section#page-ftp {
-    color:black;
-    background-image:linear-gradient(to bottom right, #EE985A, #8937AE);
-}*/
 
 
 /**

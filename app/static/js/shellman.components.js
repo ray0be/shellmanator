@@ -68,7 +68,7 @@ Vue.component('nav-servers', {
                     </a>
                 </li>
                 <li v-for="(serv, servid) in listOfServers()" v-show="expanded || servid == currentSession">
-                    <a :class="(servid == currentSession) ? 'active' : ''" @click="openSession(servid)">{{ serv.domain }}</a>
+                    <a :class="(servid == currentSession ? 'active' : '') + (hasOpenSession(servid) ? ' open' : '')" @click="openSession(servid)">{{ serv.domain }}</a>
                 </li>
                 <li>
                     <a class="manage" @click="" v-show="expanded">
@@ -95,6 +95,9 @@ Vue.component('nav-servers', {
     methods: {
         listOfServers: function() {
             return serverList;
+        },
+        hasOpenSession: function(servid) {
+            return servid in sessionList;
         },
         open: function() {
             if (!this.expanded) this.toggle();
