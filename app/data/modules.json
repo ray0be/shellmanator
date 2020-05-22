@@ -1,14 +1,22 @@
 {
     "core": {
         "title": "Dashboard",
-        "icon": "application_view_tile"
+        "icon": "application_view_tile",
+        "desc": "Core module for all mandatory controls."
     },
     "serverscan": {
         "title": "Server Scan",
-        "icon": "zoom"
+        "icon": "zoom",
+        "desc": "Server Scanner that retrieves a lot of information on the remote machine (last logins, PHP/Apache versions & extensions, disk info, users, ram info, databases, processes, ip/routes...)."
     },
     "terminal": {
         "title": "Terminal",
-        "icon": "application_osx_terminal"
+        "icon": "application_osx_terminal",
+        "desc": "Let's you run commands on the remote server with a smart UI."
+    },
+    "ftp": {
+        "title": "Files",
+        "icon": "folder_explore",
+        "desc": "File explorer and manager (create, edit, upload, rename, delete...)."
     }
 }
