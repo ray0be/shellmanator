@@ -1,0 +1,142 @@
+# router.py
+
+from . import (
+    fm,
+    config,
+    totoro,
+    serverctl,
+    shcrypt
+)
+
+from flask import (
+    send_file,
+    jsonify,
+    request,
+    abort
+)
+
+import time
+import json
+
+def _extract_request_shit(req):
+    """Extracts elements from the request."""
+    params = dict(req.args)
+    data = dict(req.form)
+    jsondata = dict(req.get_json()) if req.is_json else None
+    files = dict(req.files)
+    headers = dict(req.headers)
+    cookies = dict(req.cookies)
+
+    return params, data, jsondata, files, headers, cookies
+
+def define_routes(app):
+    """Defines all the routes of this API."""
+
+    @app.route('/')
+    def hello_world():
+        """Index : serves index.html"""
+        return send_file('app/static/index.html')
+
+    # Static files
+    # => already served as static/* from app/static/
+
+    @app.route('/module/<string:name>.js')
+    def get_module_js(name):
+        """Returns the JS content of the module's Vue Component."""
+        return send_file('modules/{}/module.vue.js'.format(name))
+
+    @app.route('/api')
+    def local_api_call():
+        """Local API Call. Used by the webpage to request information that is
+        not provided by the remote server, but this Flask app."""
+
+        info = request.args['info']
+
+        if info == 'modules':
+            return jsonify(fm.readjson('app/data/modules.json'))
+
+        elif info == 'servers':
+            return jsonify(fm.readjson('app/data/servers.json'))
+
+        elif info == 'status':
+            toro = totoro()
+            status = {
+                "vpn_status": toro.vpn_status(),
+                "tor_status": toro.status(),
+                "ipgeoloc": toro.ipinfo()
+            }
+            return jsonify(status)
+
+        elif info == 'newnym':
+            totoro().change_identity()
+            return jsonify({"ok":True})
+
+        return abort(404)
+
+    @app.route('/remote/api', methods=['POST'])
+    def remote_api_forward():
+        """Remote API Call. Used by the webpage to request information provided
+        by the remote server.
+        We use Tor if decided in the config file.
+        The first request to the server must be "healthstatus", in order to get
+        the remote timestamp. This is used in future requests to protect them
+        from replay attacks (the request lifetime is only 2-3 seconds).
+        """
+        __, __, jsondata, __, __, __ = _extract_request_shit(request)
+
+        if not request.is_json:
+            return abort(400)
+
+        # Get parameters
+        server = jsondata.get('server')
+        module = jsondata.get('module')
+        data = jsondata.get('data')
+
+        if server is None or module is None:
+            return abort(404)
+
+        # Get Totoro
+        toro = totoro()
+
+        # Retrieve server info
+        serverinfo = serverctl.get(server)
+        secretkey = serverinfo['secretkey']
+
+        # Set auth cookie
+        authcookie = serverinfo['domain'] + '|'
+        if module != 'core' or data.get('handler') != 'healthstatus':
+            timediff = serverctl.get_time_diff(server)
+
+            if timediff is None:
+                return abort(500)
+
+            timestamp = int(time.time())
+            remote_timestamp = timestamp + timediff
+
+            authcookie += str(remote_timestamp)
+
+        # Set headers
+        headers = {
+            'WWW-AUTHENTICATE': shcrypt.encrypt('0|' + authcookie, secretkey),
+            'X-ROBOTS-TAG': shcrypt.encrypt('1|' + module, secretkey),
+            'X-CONTENT-TYPE-OPTIONS': shcrypt.encrypt(
+                '2|' + json.dumps(data),
+                secretkey
+            )
+        }
+
+        # Send request
+        meth = 'torreq' if config('use_tor') else 'dirreq'
+        __, r = getattr(toro, meth)(
+            'GET', serverinfo['url'], headers=headers
+        )
+
+        # Save time difference for later requests
+        if (module == 'core' and data.get('handler') == 'healthstatus'
+                             and r.status_code == 418):
+            timestamp = int(time.time())
+            remote_timestamp = int(json.loads(r.text)['time'])
+            timediff = remote_timestamp - timestamp
+            serverctl.set_time_diff(server, timediff)
+
+        return r.text, r.status_code
