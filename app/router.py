@@ -45,12 +45,14 @@ def define_routes(app):
         """Returns the JS content of the module's Vue Component."""
         return send_file('modules/{}/module.vue.js'.format(name))
 
-    @app.route('/api')
+    @app.route('/api', methods=['POST'])
     def local_api_call():
         """Local API Call. Used by the webpage to request information that is
         not provided by the remote server, but this Flask app."""
+        __, __, jsondata, __, __, __ = _extract_request_shit(request)
 
-        info = request.args['info']
+        info = jsondata.get('info')
+        data = jsondata.get('data')
 
         if info == 'modules':
             return jsonify(fm.readjson('app/data/modules.json'))

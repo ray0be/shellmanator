@@ -110,15 +110,17 @@ const app = new Vue({
         /**
          * Performs a request against the local API
          */
-        localAPIcall: function(info, cb) {
-            if (this.startAPIcall('local', info, null, null)) {
+        localAPIcall: function(info, data, cb) {
+            if (this.startAPIcall('local', info, null, data)) {
                 jQuery.ajax({
-                    method: "GET",
+                    method: "POST",
                     url: API_LOCAL,
-                    data: {
-                        "info": info
-                    },
+                    data: JSON.stringify({
+                        "info": info,
+                        "data": data
+                    }),
                     timeout: 10000,
+                    contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: (data, status, xhr) => {
                         this.endAPIcall(false, xhr.status, xhr.statusText);
@@ -141,11 +143,11 @@ const app = new Vue({
                     method: "POST",
                     url: API_REMOTE,
                     data: JSON.stringify({
-                        server: (servid ? servid : this.$store.state.currentSession),
-                        module: moduleName,
-                        data: {
-                            handler: handler,
-                            data: data
+                        "server": (servid ? servid : this.$store.state.currentSession),
+                        "module": moduleName,
+                        "data": {
+                            "handler": handler,
+                            "data": data
                         }
                     }),
                     timeout: 10000,
@@ -168,7 +170,7 @@ const app = new Vue({
          * Refresh IP Status
          */
         refreshStatus: function() {
-            this.localAPIcall('status', (d) => {
+            this.localAPIcall('status', null, (d) => {
                 this.status.vpn = d.vpn_status;
                 this.status.tor = d.tor_status;
 
@@ -192,7 +194,7 @@ const app = new Vue({
          * and then a new IP address.
          */
         changeIdentity: function() {
-            this.localAPIcall('newnym', (d) => {
+            this.localAPIcall('newnym', null, (d) => {
                 this.refreshStatus();
             });
         }
@@ -208,7 +210,7 @@ const app = new Vue({
 
 $(function() {
     // Fetch the list of modules
-    app.localAPIcall('modules', function(d) {
+    app.localAPIcall('modules', null, function(d) {
         moduleList = d;
 
         for (var m in moduleList) {
@@ -218,7 +220,7 @@ $(function() {
         }
 
         // Fetch the list of servers
-        app.localAPIcall('servers', function(d) {
+        app.localAPIcall('servers', null, function(d) {
             stateStore.commit('setNbServers', Object.keys(d).length);
             serverList = d;
             //app.refresh_status();
