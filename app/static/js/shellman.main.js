@@ -37,6 +37,13 @@ const app = new Vue({
                     ip: null
                 }
             }
+        },
+        modalData: {
+            activeClass: false,
+            title: "",
+            body: "",
+            cbSubmit: null,
+            cbCancel: null
         }
     },
     computed: {
@@ -45,6 +52,9 @@ const app = new Vue({
         }
     },
     methods: {
+        /**
+         * Returns the list of all the registered servers
+         */
         listOfServers: function() {
             return serverList;
         },
@@ -200,6 +210,33 @@ const app = new Vue({
             this.localAPIcall('newnym', null, (d) => {
                 this.refreshStatus();
             });
+        },
+
+        /**
+         * Methods to work with Modals
+         *
+         * Used to open & close modals.
+         */
+        modal: function(title, body, cbSubmit, cbCancel=null) {
+            this.modalData.title = title;
+            this.modalData.body = body;
+            this.modalData.cbSubmit = cbSubmit;
+            this.modalData.cbCancel = cbCancel;
+            this.modalData.activeClass = "active";
+        },
+
+        cancelModal: function() {
+            this.modalData.activeClass = "";
+            if (this.modalData.cbCancel) {
+                this.modalData.cbCancel();
+            }
+        },
+
+        submitModal: function() {
+            this.modalData.activeClass = "";
+            if (this.modalData.cbSubmit) {
+                this.modalData.cbSubmit();
+            }
         }
     }
 });

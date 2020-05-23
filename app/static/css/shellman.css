@@ -22,12 +22,11 @@ dl dd {
     margin:.2rem 0 .4rem 10px;
 }
 
-/*a, a:active, a:hover, a:focus {
+a, a:active, a:hover, a:focus {
     text-decoration:none !important;
     cursor:pointer;
-    background:inherit !important;
-    color:inherit !important;
 }
+/*
 a.blue {
     color:blue !important;
 }
@@ -229,6 +228,19 @@ header .rotated {
 }
 #ipstatus .nok::before {
     content:'NOK';
+}
+
+/**
+ * Modal priority
+ */
+.modal.active {
+    z-index:501;
+}
+.modal-overlay {
+    z-index:502;
+}
+.modal.active .modal-container {
+    z-index:503;
 }
 
 
