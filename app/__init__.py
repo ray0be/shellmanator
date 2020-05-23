@@ -8,3 +8,4 @@ from app.tororeq import get as totoro
 
 from app import router
 from app import serverctl
+from app import romanicomposer

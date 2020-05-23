@@ -12,6 +12,7 @@ const app = new Vue({
     el: '#vue-root',
     store: stateStore,
     data: {
+        pleasewait: false,
         request: {
             isInProgress: false,
             type: null,
@@ -75,7 +76,7 @@ const app = new Vue({
                 for (let param in data) {
                     let tmpdata = data[param];
                     tmpdata = /\s/.test(tmpdata) ? '[...]' : tmpdata;
-                    tmpdata = (tmpdata.length > 15) ? substr(tmpdata, 0, 10)+'[...]' : tmpdata;
+                    tmpdata = (tmpdata.length > 15) ? tmpdata.substr(0, 10)+'[...]' : tmpdata;
                     tmp += ` | ${param}=${tmpdata}`;
                 }
                 this.request.info = tmp;

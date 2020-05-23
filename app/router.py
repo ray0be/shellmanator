@@ -5,7 +5,8 @@ from . import (
     config,
     totoro,
     serverctl,
-    shcrypt
+    shcrypt,
+    romanicomposer
 )
 
 from flask import (
@@ -28,6 +29,9 @@ def _extract_request_shit(req):
     cookies = dict(req.cookies)
 
     return params, data, jsondata, files, headers, cookies
+
+def _upload_romanishell():
+    pass
 
 def define_routes(app):
     """Defines all the routes of this API."""
@@ -90,6 +94,23 @@ def define_routes(app):
             fm.writejson('app/data/notes.json', noteData)
             return jsonify({"ok":True})
 
+        elif info == 'genshell':
+            key = data['key']
+            servid = data['servid']
+            modules = data['modules']
+            serverinfo = serverctl.get(servid)
+
+            if key == 'new':
+                secretkey = shcrypt.generate_secret_key()
+            else:
+                secretkey = serverinfo['secretkey']
+
+            ok, genedfile = romanicomposer.compose(secretkey, modules, servid)
+            if ok:
+                return jsonify({"shell":genedfile, "secretkey":secretkey})
+            else:
+                return abort(500)
+
         return abort(404)
 
     @app.route('/remote/api', methods=['POST'])
@@ -144,19 +165,41 @@ def define_routes(app):
             )
         }
 
+        # Is it a romanishell update?
+        datareq = None
+        genedfile = 'romanishell/generated/' + server + '.php'
+        is_update = (module == 'core'
+                     and data.get('handler') == 'update'
+                     and 'secretkey' in data.get('data')
+                     and fm.exists(genedfile))
+        if is_update:
+            #headers['Content-Type'] = 'text/plain'
+            datareq = shcrypt.encrypt(fm.read(genedfile), secretkey)
+
         # Send request
         meth = 'torreq' if config('use_tor') else 'dirreq'
         __, r = getattr(toro, meth)(
-            'GET', serverinfo['url'], headers=headers
+            'GET', serverinfo['url'], headers=headers, data=datareq
         )
         respcontent = shcrypt.decrypt(r.text, secretkey)
 
         # Save time difference for later requests
-        if (module == 'core' and data.get('handler') == 'healthstatus'
-                             and r.status_code == 418):
+        if (module == 'core'
+                and data.get('handler') == 'healthstatus'
+                and r.status_code == 418):
             timestamp = int(time.time())
             remote_timestamp = int(json.loads(respcontent)['time'])
             timediff = remote_timestamp - timestamp
             serverctl.set_time_diff(server, timediff)
+
+        # Update the secretkey if needed
+        if (is_update
+                and data.get('data').get('secretkey') != secretkey
+                and r.status_code == 200
+                and json.loads(respcontent)['success'] != False):
+            serverctl.set_secret_key(server, data.get('data').get('secretkey'))
+
+        if respcontent is None:
+            respcontent = ""
 
         return respcontent, r.status_code

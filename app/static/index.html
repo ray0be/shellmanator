@@ -62,7 +62,11 @@
         <div id="page">
             <section class="default" v-if="!currentSession">
                 <div style="width:calc(100% - 30px);position:absolute;top:50%;transform:translateY(-50%);text-align:center;">
-                    Choose a server<br>&larr;
+                    <span v-if="!pleasewait">Choose a server<br>&larr;</span>
+                    <div v-else>
+                        Please wait...<br>
+                        <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                    </div>
                 </div>
             </section>
             <session-frame v-for="(serv, servid) in listOfServers()" :session="servid" :key="'session-' + servid"></session-frame>
@@ -73,7 +77,7 @@
             <a class="modal-overlay" aria-label="Close" @click="cancelModal"></a>
             <div class="modal-container">
                 <div class="modal-header">
-                    <a href="#close" class="btn btn-clear float-right" aria-label="Close"></a>
+                    <a @click="cancelModal" class="btn btn-clear float-right" aria-label="Close"></a>
                     <div class="modal-title h5">{{ modalData.title }}</div>
                 </div>
                 <div class="modal-body">

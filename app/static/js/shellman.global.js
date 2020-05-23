@@ -134,6 +134,7 @@ class Module
         this.name = moduleName;
         this.title = moduleList[moduleName].title;
         this.icon = moduleList[moduleName].icon;
+        this.desc = moduleList[moduleName].desc;
     }
 
     makeRequest(handler, data, cb, cbError=null) {

@@ -80,9 +80,11 @@ Vue.component('nav-servers', {
         </nav>`,
     created: function() {
         eventHub.$on('open-servers-list', this.open);
+        eventHub.$on('open-session', this.openSession);
     },
     beforeDestroy: function () {
         eventHub.$off('open-servers-list');
+        eventHub.$off('open-session');
     },
     computed: {
         nbServers: function() {
