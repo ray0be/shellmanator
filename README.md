@@ -52,8 +52,8 @@ Requirements (remote servers) :
 Credits :
 
 * Python :
-  * [Flask 1.1.2](https://flask.palletsprojects.com/en/1.1.x/) ([Flask License](https://flask.palletsprojects.com/en/1.1.x/license/))
-  * [Requests 2.23.0](https://requests.readthedocs.io/en/master/) ([Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0))
+  * [Flask 1.1.2](https://flask.palletsprojects.com/en/1.1.x/) ([BSD-3-Clause](https://flask.palletsprojects.com/en/1.1.x/license/))
+  * [Requests 2.23.0](https://requests.readthedocs.io/en/master/) ([Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0))
   * [Totoro 1.1.2](https://github.com/ray0be/totororequests) ([MIT](https://opensource.org/licenses/MIT))
 * Javascript :
   * [Vue.js v2.6.11](https://vuejs.org/) ([MIT](https://opensource.org/licenses/MIT))
@@ -64,7 +64,7 @@ Credits :
 * CSS :
   * [Spectre.css 0.5.8](https://picturepan2.github.io/spectre/index.html) ([MIT](https://opensource.org/licenses/MIT))
 * Icons :
-  * [FAMFAMFAM Silk Icons 1.3](http://www.famfamfam.com/lab/icons/silk/) ([CC A 2.5](https://creativecommons.org/licenses/by/2.5/))
+  * [FAMFAMFAM Silk Icons 1.3](http://www.famfamfam.com/lab/icons/silk/) ([CC-BY-2.5](https://creativecommons.org/licenses/by/2.5/))
 
 
 ## Versions
