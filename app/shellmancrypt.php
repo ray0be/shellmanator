@@ -5,6 +5,10 @@ if (count($argv) !== 4) {
     exit(1);
 }
 
+function generatekey($len) {
+    return base64_encode(openssl_random_pseudo_bytes($len));
+}
+
 function strencrypt($plaintext, $b64_key, $cipher="AES-256-CBC") {
     $key = base64_decode($b64_key);
     $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($cipher));
@@ -47,6 +51,9 @@ switch ($argv[1]) {
             echo $tmp;
             exit(0);
         }
+    case 'key':
+        echo generatekey(32);
+        exit(0);
     default:
         echo 'ERROR';
         exit(1);

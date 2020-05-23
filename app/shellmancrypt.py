@@ -16,3 +16,6 @@ def encrypt(msg, key):
 
 def decrypt(msg, key):
     return _run_shellmancrypt_php('decrypt', msg, key)
+
+def generate_secret_key():
+    return _run_shellmancrypt_php('key', 'A', 'A')
