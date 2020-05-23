@@ -149,13 +149,14 @@ def define_routes(app):
         __, r = getattr(toro, meth)(
             'GET', serverinfo['url'], headers=headers
         )
+        respcontent = shcrypt.decrypt(r.text, secretkey)
 
         # Save time difference for later requests
         if (module == 'core' and data.get('handler') == 'healthstatus'
                              and r.status_code == 418):
             timestamp = int(time.time())
-            remote_timestamp = int(json.loads(r.text)['time'])
+            remote_timestamp = int(json.loads(respcontent)['time'])
             timediff = remote_timestamp - timestamp
             serverctl.set_time_diff(server, timediff)
 
-        return r.text, r.status_code
+        return respcontent, r.status_code

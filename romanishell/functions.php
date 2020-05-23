@@ -205,6 +205,6 @@ function fail() {
  * Returns back (to client) a JSON encoded response.
  */
 function jsonback($arr) {
-    header('Content-Type: application/json');
-    return json_encode($arr);
+    global $SECRET_KEY;
+    return strencrypt(json_encode($arr), $SECRET_KEY);
 }
