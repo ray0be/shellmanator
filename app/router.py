@@ -30,9 +30,6 @@ def _extract_request_shit(req):
 
     return params, data, jsondata, files, headers, cookies
 
-def _upload_romanishell():
-    pass
-
 def define_routes(app):
     """Defines all the routes of this API."""
 
@@ -59,12 +56,16 @@ def define_routes(app):
         data = jsondata.get('data')
 
         if info == 'modules':
+            """Returns the list of modules."""
             return jsonify(fm.readjson('app/data/modules.json'))
 
         elif info == 'servers':
+            """Returns the list of registered servers."""
             return jsonify(fm.readjson('app/data/servers.json'))
 
         elif info == 'status':
+            """Returns the Totoro status (official IP + Tor identity + geoloc).
+            """
             toro = totoro()
             status = {
                 "vpn_status": toro.vpn_status(),
@@ -74,10 +75,12 @@ def define_routes(app):
             return jsonify(status)
 
         elif info == 'newnym':
+            """Requests a new Tor identity."""
             totoro().change_identity()
             return jsonify({"ok":True})
 
         elif info == 'getnote':
+            """Returns the note about a server."""
             noteData = fm.readjson('app/data/notes.json')
             servid = data['servid']
 
@@ -86,6 +89,7 @@ def define_routes(app):
             return jsonify({"content":noteContent})
 
         elif info == 'savenote':
+            """Saves a note about a server."""
             noteData = fm.readjson('app/data/notes.json')
             servid = data['servid']
             content = data['content']
@@ -95,6 +99,8 @@ def define_routes(app):
             return jsonify({"ok":True})
 
         elif info == 'genshell':
+            """Generates a romanishell for a remote server, with the given
+            list of modules, and optionally a new secret key."""
             key = data['key']
             servid = data['servid']
             modules = data['modules']
@@ -157,7 +163,14 @@ def define_routes(app):
 
         # Set headers
         headers = {
+            # Cache
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache',
+
+            # Auth
             'WWW-AUTHENTICATE': shcrypt.encrypt('0|' + authcookie, secretkey),
+
+            # Payloads
             'X-ROBOTS-TAG': shcrypt.encrypt('1|' + module, secretkey),
             'X-CONTENT-TYPE-OPTIONS': shcrypt.encrypt(
                 '2|' + json.dumps(data),

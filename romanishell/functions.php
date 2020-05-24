@@ -202,7 +202,7 @@ function fail() {
 }
 
 /**
- * Returns back (to client) a JSON encoded response.
+ * Returns back (to client) a JSON encrypted response.
  */
 function jsonback($arr) {
     global $SECRET_KEY;

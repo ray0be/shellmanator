@@ -124,31 +124,22 @@ Vue.component('module-core', {
                         html = `<p>The new romanishell has been generated.</p>
                             <p>Check the file <strong>${d.shell}</strong> and continue if everything seems OK.</p>`;
                         app.modal(`${title} - 2/2`, html, ()=>{
-                            this.apiCall('update', {'secretkey':d.secretkey}, (d)=>{
-                                if (d.success) {
-                                    //sessionList[this.session].modules = {};
-                                    var nextSteps = ()=>{
-                                        delete sessionList[this.session];
-                                        this.$store.commit('setSession', null);
-                                        this.$store.commit('setModule', null);
-
-                                        app.pleasewait = true;
-                                        setTimeout(()=>{
-                                            eventHub.$emit('open-session', this.session);
-                                            app.pleasewait = false;
-                                        }, 5000);
-                                    };
-
+                            this.apiCall('update', {'secretkey':d.secretkey}, (d2)=>{
+                                if (d2.success) {
                                     if (newKey) {
-                                        app.localAPIcall('servers', null, (d)=>{
-                                            stateStore.commit('setNbServers', Object.keys(d).length);
-                                            serverList = d;
-                                            nextSteps();
-                                        });
+                                        serverList[this.session].secretkey = d.secretkey;
                                     }
-                                    else {
-                                        nextSteps();
-                                    }
+
+                                    app.pleasewait = true;
+
+                                    delete sessionList[this.session];
+                                    this.$store.commit('setSession', null);
+                                    this.$store.commit('setModule', null);
+
+                                    setTimeout(()=>{
+                                        eventHub.$emit('open-session', this.session);
+                                        app.pleasewait = false;
+                                    }, 5000);
                                 }
                             }, ()=>{
                                 alert('Une erreur est survenue.');
