@@ -290,18 +290,7 @@ header .rotated {
  * ==========================================================================
  */
 
-#page-dashboard ul {
-    margin:0;
-}
-#page-dashboard ul li {
-    margin-top:0;
-}
-#page-dashboard .panel-body {
-    padding-bottom:10px;
-}
-#page-dashboard .panel {
-    margin-bottom:15px;
-}
+
 
 
 /**
